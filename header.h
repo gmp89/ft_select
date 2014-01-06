@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/06 19:59:54 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/06 22:08:37 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ typedef struct		s_data
 	int				max_row;
 	int				col;
 	int				li;
+	int				pos_init;
+	int				pos;
 }					t_data;
 
 typedef struct	s_window
@@ -49,7 +51,7 @@ void	ft_print_tab(char **tabs);
 int		ft_store(t_data *d, char **av, int ac);
 int		 tputs_putchar(int c);
 int		is_bgreq(char *buf);
-int		is_arrow(char *buf);
+int		is_arrow(char *buf, t_data *d);
 int		is_rtn(char *buf);
 
 #endif

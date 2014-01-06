@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/06 20:44:56 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/06 22:25:31 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,25 +76,40 @@ int		ft_set_stage(int ac, struct termios *term)
 		term->c_cc[VMIN] = 1;
 		term->c_cc[VTIME] = 0;
 		tcsetattr(0, 0, term);
-		
+		tputs(tgetstr("ti", NULL), 1, tputs_putchar);
 	}
 	return (1);
 }
 
-int		is_arrow(char *buf)
+int		is_arrow(char *buf, t_data *d)
 {
 	/* int	rslt; */
 	if (buf[0] != 27 && buf[1] != 91)
 		return (-1);
-	/* if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66) */
-	/* 	tputs(tgetstr("do", NULL), 1, tputs_putchar); */
-	if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 66))
+	if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 66) && d->pos == d->pos_init)
+	{
+		tputs(tgoto(tgetstr("cm", NULL), 0, 0), 1, tputs_putchar);
+		d->pos = (d->pos + 1) - d->pos_init;
+	}
+	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
 	{
 		tputs(tgetstr("do", NULL), 1, tputs_putchar);
-		tputs(tgetstr("sc", NULL), 1, tputs_putchar);
+		d->pos += 1;
+	}
+	else if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 65) && d->pos == 1)
+	{
+		int		i;
+
+		i = 1;
+		while (++i <= d->pos_init)
+			tputs(tgetstr("do", NULL), 1, tputs_putchar);
+		d->pos = d->pos_init;
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
+	{
 		tputs(tgetstr("up", NULL), 1, tputs_putchar);
+		d->pos -= 1;
+	}
 	else
 		return (-1);
 	return (0);
@@ -131,7 +146,7 @@ int		ft_while(t_data *d, struct termios *term)
 				tputs(tgetstr("ti", NULL), 1, tputs_putchar);
 				return (1);
 			}
-			if (is_arrow(d->read_char) == 0)
+			if (is_arrow(d->read_char, d) == 0)
 				;
 			else
 				printf("%d %d %d\n", d->read_char[0], d->read_char[1], d->read_char[2]);
@@ -145,10 +160,13 @@ int		main(int ac, char **av/* , char **env */)
 	t_data			d;
 
 	d.max_row = --ac;
+	d.pos_init = d.max_row;
+	d.pos = d.pos_init;
 	ft_store(&d, av, ac);
-	ft_print_tab(d.arg);
 	if(ft_set_stage(ac, &term))
 	ft_get_size(&size);
+	ft_print_tab(d.arg);
+	tputs(tgetstr("up", NULL), 1, tputs_putchar);
 	ft_while(&d, &term);
 //	ft_set_tabs();
 //	ft_print(argc, argv);
