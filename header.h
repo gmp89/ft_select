@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/07 21:36:25 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/07 22:19:37 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ void	print_list_if(t_list *list, t_data *d);
 int		is_select(t_list *list, t_data *d);
 int		is_us(t_list *list, t_data *d);
 void	print_list_us(t_list *list, t_data *d);
+void	make_header(void);
 
 #endif

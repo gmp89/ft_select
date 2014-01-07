@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/07 22:04:34 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/07 22:27:05 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		tputs(tgoto(tgetstr("cm", NULL), 0, 0), 1, tputs_putchar);
 		d->pos = (d->pos + 1) - d->pos_init;
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		make_header();
 		print_list_us(list, d);
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
@@ -152,6 +153,7 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		tputs(tgetstr("do", NULL), 1, tputs_putchar);
 		d->pos += 1;
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		make_header();
 		print_list_us(list, d);
 	}
 	else if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 65) && d->pos == 1)
@@ -161,6 +163,7 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 			tputs(tgetstr("do", NULL), 1, tputs_putchar);
 		d->pos = d->pos_init;
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		make_header();
 		print_list_us(list, d);
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
@@ -168,6 +171,7 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		tputs(tgetstr("up", NULL), 1, tputs_putchar);
 		d->pos -= 1;
+		make_header();
 		print_list_us(list, d);
 	}
 	else
@@ -193,6 +197,7 @@ int		is_spc(char *buf, t_list *list, t_data *d)
 	if (buf[0] == 32 && buf[1] == 91)
 	{
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		make_header();
 		/* tputs(tgetstr("us", NULL), 1, tputs_putchar); */
 		if (is_select(list, d) == 0)
 			print_list_if(list, d);
@@ -385,6 +390,7 @@ int		main(int ac, char **av/* , char **env */)
 	/* ft_get_size(size); */
 	/* print_list(list); */
 	/* print_list_if(list, &d); */
+	make_header();
 	print_list_us(list, &d);
 	/* ft_print_tab(d.arg); */
 	tputs(tgetstr("up", NULL), 1, tputs_putchar);
@@ -399,4 +405,15 @@ int		main(int ac, char **av/* , char **env */)
 int		is_rtn(char *buf)
 {
 	return (buf[0] == 10);
+}
+
+void	make_header(void)
+{
+	ft_putstr("              .__                 __   \n");
+	ft_putstr("  ______ ____ |  |   ____   _____/  |_ \n");
+	ft_putstr(" /  ___// __ \\|  | _/ __ \\_/ ___\\   __\\\n");
+	ft_putstr(" \\___ \\\\  ___/|  |_\\  ___/\\  \\___|  |  \n");
+	ft_putstr("/____  >\\___  >____/\\___  >\\___  >__|  \n");
+	ft_putstr("     \\/     \\/          \\/     \\/      \n");
+	ft_putstr("========================================\n");
 }
