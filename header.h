@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/06 22:08:37 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/07 21:36:25 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,40 @@ typedef struct		s_data
 	int				li;
 	int				pos_init;
 	int				pos;
+	int				is;
+	int				selected;
+	int				save_selected;
+	int				us;
+	int				save_us;
 }					t_data;
 
-typedef struct	s_window
+typedef struct		s_list
 {
-	int	li;
-	int	co;
-}				t_window;
+	int				index;
+	char			*str;
+	int				li;
+	int				co;
+	struct s_list	*next;
+	struct s_list	*prev;
+}					t_list;
 
-int		ft_get_size(t_window *size);
+int		ft_get_size(t_list *size);
 int		ft_set_stage(int argc, struct termios *term);
 void	ft_print_tab(char **tabs);
 int		ft_store(t_data *d, char **av, int ac);
-int		 tputs_putchar(int c);
+int		tputs_putchar(int c);
 int		is_bgreq(char *buf);
-int		is_arrow(char *buf, t_data *d);
+int		is_arrow(char *buf, t_data *d, t_list *list);
 int		is_rtn(char *buf);
+void	add_element_end(t_list **list, t_list *new);
+t_list 	*ft_make_list(char **av);
+void	print_list(t_list *list, t_data *d);
+void	add_new_element(t_list **list, t_list *new);
+t_list	*new_list(char *str);
+int		is_spc(char *buf, t_list *list, t_data *d);
+void	print_list_if(t_list *list, t_data *d);
+int		is_select(t_list *list, t_data *d);
+int		is_us(t_list *list, t_data *d);
+void	print_list_us(t_list *list, t_data *d);
 
 #endif

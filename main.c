@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/06 22:25:31 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/07 21:52:28 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		ft_store(t_data *d, char **av, int ac)
 	return (0);
 }
 
-int		ft_get_size(t_window *size)
+int		ft_get_size(t_list *size)
 {
 	if((size->co = tgetnum("co")) < 1)
 		return (-1);
@@ -81,8 +81,62 @@ int		ft_set_stage(int ac, struct termios *term)
 	return (1);
 }
 
-int		is_arrow(char *buf, t_data *d)
+int		is_us(t_list *list, t_data *d)
 {
+	list->co = 1;
+	if (d->us == 1)
+		return (1);
+	return (0);
+}
+
+int		is_select(t_list *list, t_data *d)
+{
+	list->co = 1;
+	if (d->selected == 1)
+		return (1);
+	return (0);
+}
+
+void	print_list_us(t_list *list, t_data *d)
+{
+	t_list	*tmp;
+
+	tmp = list;
+	while (tmp->next != NULL)
+	{
+		if ((tmp->index + 1) == d->pos)
+		{
+			tputs(tgetstr("us", NULL), 1, tputs_putchar);
+			ft_putstr(tmp->str);
+			ft_putchar('\n');
+			tputs(tgetstr("ue", NULL), 1, tputs_putchar);
+			tmp = tmp->next;
+		}
+		if (tmp->next != NULL)
+		{
+			ft_putstr(tmp->str);
+			ft_putchar('\n');
+			tmp = tmp->next;
+		}
+	}
+	if ((tmp->index + 1) == d->pos && d->is == 1)
+	{
+		tputs(tgetstr("us", NULL), 1, tputs_putchar);
+		ft_putstr(tmp->str);
+		ft_putchar('\n');
+		tputs(tgetstr("ue", NULL), 1, tputs_putchar);
+		tmp = tmp->next;
+	}
+	else
+	{
+		ft_putstr(tmp->str);
+		ft_putchar('\n');
+	}
+}
+
+int		is_arrow(char *buf, t_data *d, t_list *list)
+{
+	int		i;
 	/* int	rslt; */
 	if (buf[0] != 27 && buf[1] != 91)
 		return (-1);
@@ -98,8 +152,6 @@ int		is_arrow(char *buf, t_data *d)
 	}
 	else if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 65) && d->pos == 1)
 	{
-		int		i;
-
 		i = 1;
 		while (++i <= d->pos_init)
 			tputs(tgetstr("do", NULL), 1, tputs_putchar);
@@ -107,7 +159,9 @@ int		is_arrow(char *buf, t_data *d)
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
 	{
+		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		tputs(tgetstr("up", NULL), 1, tputs_putchar);
+		print_list_us(list, d);
 		d->pos -= 1;
 	}
 	else
@@ -125,7 +179,28 @@ void	ft_print_pos(t_data *d)
 	ft_putchar('\n');
 }
 
-int		ft_while(t_data *d, struct termios *term)
+int		is_spc(char *buf, t_list *list, t_data *d)
+{
+	int		i;
+
+	i = d->pos_init;
+	if (buf[0] == 32 && buf[1] == 91)
+	{
+		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		/* tputs(tgetstr("us", NULL), 1, tputs_putchar); */
+		if (is_select(list, d) == 0)
+			print_list_if(list, d);
+		else
+			print_list(list, d);
+		while (i-- >= d->pos)
+			tputs(tgetstr("up", NULL), 1, tputs_putchar);
+		return (0);
+	}
+	else
+		return (-1);
+}
+
+int		ft_while(t_data *d, struct termios *term, t_list *list)
 {
 		while (ft_strcmp(d->read_char, "exit") != 0)
 		{
@@ -146,28 +221,168 @@ int		ft_while(t_data *d, struct termios *term)
 				tputs(tgetstr("ti", NULL), 1, tputs_putchar);
 				return (1);
 			}
-			if (is_arrow(d->read_char, d) == 0)
+			if (is_arrow(d->read_char, d, list) == 0)
+				;
+			else if (is_spc(d->read_char, list, d) == 0)
 				;
 			else
 				printf("%d %d %d\n", d->read_char[0], d->read_char[1], d->read_char[2]);
 		}
 		return (0);
 }
+
+void	add_new_element(t_list **list, t_list *new)
+{
+	t_list	*tmp;
+
+	tmp = *list;
+	new->next = *list;
+	tmp->prev = new;
+	*list = new;
+}
+
+void	add_element_end(t_list **list, t_list *new)
+{
+	t_list	*tmp;
+
+	tmp = *list;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
+	new->prev = tmp;
+}
+
+void		index_list(t_list **list)
+{
+	t_list	*tmp;
+	int		i;
+
+	i = 1;
+	tmp = *list;
+	while (tmp->next != NULL)
+	{
+		tmp = tmp->next;
+		tmp->index = i;
+		i++;
+	}
+}
+
+t_list		*ft_make_list(char **av)
+{
+	t_list	*ret;
+	int		i;
+
+	i = 1;
+	ret = new_list(av[i]);
+	while (av[++i] != 0)
+		add_element_end(&ret, new_list(av[i]));
+	index_list(&ret);
+	return (ret);
+}
+
+t_list	*new_list(char *str)
+{
+	t_list	*new_list;
+
+	new_list = (t_list *)malloc(sizeof(t_list));
+	if (new_list == NULL)
+		return (NULL);
+	if (str == NULL)
+		new_list->str = NULL;
+	else
+		new_list->str = ft_strdup(str);
+	new_list->next = NULL;
+	new_list->prev = NULL;
+	return (new_list);
+}
+
+void	print_list(t_list *list, t_data *d)
+{
+	t_list	*tmp;
+
+	tmp = list;
+	while (tmp->next != NULL)
+	{
+		ft_putstr(tmp->str);
+		/* ft_putnbr(tmp->index); */
+		ft_putchar('\n');
+		tmp = tmp->next;
+	}
+	ft_putstr(tmp->str);
+	/* ft_putnbr(tmp->index); */
+	ft_putchar('\n');
+	d->selected = 0;
+}
+
+/* void	print_help(t_list **tmp, t_data *d) */
+/* { */
+/* } */
+
+
+void	print_list_if(t_list *list, t_data *d)
+{
+	t_list	*tmp;
+
+	tmp = list;
+	while (tmp->next != NULL)
+	{
+		if ((tmp->index + 1) == d->pos)
+		{
+			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			tputs(tgetstr("us", NULL), 1, tputs_putchar);
+			ft_putstr(tmp->str);
+			ft_putchar('\n');
+			tputs(tgetstr("ue", NULL), 1, tputs_putchar);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+			tmp = tmp->next;
+		}
+		if (tmp->next != NULL)
+		{
+			ft_putstr(tmp->str);
+			ft_putchar('\n');
+			tmp = tmp->next;
+		}
+	}
+	if ((tmp->index + 1) == d->pos && d->is == 1)
+	{
+		tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+		tputs(tgetstr("us", NULL), 1, tputs_putchar);
+		ft_putstr(tmp->str);
+		ft_putchar('\n');
+		tputs(tgetstr("ue", NULL), 1, tputs_putchar);
+		tputs(tgetstr("me", NULL), 1, tputs_putchar);
+		tmp = tmp->next;
+	}
+	else
+	{
+		ft_putstr(tmp->str);
+		ft_putchar('\n');
+	}
+	d->is = 1;
+	d->selected = 1;
+}
+
 int		main(int ac, char **av/* , char **env */)
 {
 	struct termios	term;
-	t_window		size;
+	t_list			*size;
 	t_data			d;
+	t_list			*list;
 
+	list = NULL;
+	size = NULL;
 	d.max_row = --ac;
 	d.pos_init = d.max_row;
 	d.pos = d.pos_init;
-	ft_store(&d, av, ac);
+	list = ft_make_list(av);
 	if(ft_set_stage(ac, &term))
-	ft_get_size(&size);
-	ft_print_tab(d.arg);
+	/* ft_get_size(size); */
+	/* print_list(list); */
+	/* print_list_if(list, &d); */
+	print_list_us(list, &d);
+	/* ft_print_tab(d.arg); */
 	tputs(tgetstr("up", NULL), 1, tputs_putchar);
-	ft_while(&d, &term);
+	ft_while(&d, &term, list);
 //	ft_set_tabs();
 //	ft_print(argc, argv);
 //	ft_wait_for_input();
@@ -178,79 +393,3 @@ int		is_rtn(char *buf)
 {
 	return (buf[0] == 10);
 }
-
-/* int		is_bgreq(char *buf) */
-/* { */
-/* 	if (buf[0] == 26) */
-/* 		return (1); */
-/* 	else */
-/* 		return (0); */
-/* } */
-
-/* int		 tputs_putchar(int c) */
-/* { */
-/* 	write(1, &c, 1); */
-/* 	return (1); */
-/* } */
-
-/* int		main(int ac, char **av, char **env) */
-/* { */
-/* 	t_data			d; */
-/* 	struct termios	term; */
-/* 	char			buffer[2048]; */
-/* 	char			read_char[4] = {0}; */
-/* 	(void)env; */
-
-/* 	if (ac > 0) */
-/* 	{ */
-/* 		ft_store(&d, av, ac); */
-/* 		/\* ft_print_tab(d.arg); *\/ */
-/* 		if (tgetent(buffer, getenv("TERM")) < 1) */
-/* 			return (-1); */
-/* 		tcgetattr(0, &term); */
-/* 		term.c_lflag &= ICANON; /\* each char is treated independently *\/ */
-/* 		term.c_lflag &= ECHO; /\* prevents a char from being output when pressed*\/ */
-/* 		tcsetattr(0, 0, &term); */
-/* 		tputs(tgetstr("ti", NULL), 1, tputs_putchar); */
-/* 		tputs(tgetstr("mr", NULL), 1, tputs_putchar); /\* turns on reverse video *\/ */
-/* 		write(1, "Menu", 4); */
-/* 		ft_putchar('\n'); */
-/* 		tputs(tgetstr("me", NULL), 1, tputs_putchar); */
-/* 		ft_print_tab(d.arg); */
-/* 		/\* tputs(tgetstr("me", NULL), 1, tputs_putchar); /\\* turns off all *\\/ *\/ */
-/* 		/\* tputs(tgetstr("do", NULL), 1, tputs_putchar); /\\* cursor down one line *\\/ *\/ */
-/* 		/\* write(1, "normal", 7); *\/ */
-/* 		/\* tputs(tgetstr("do", NULL), 1, tputs_putchar); /\\* cursor down one line *\\/ *\/ */
-/* 		while (ft_strcmp(read_char, "exit") != 0) */
-/* 		{ */
-/* 			read(0, read_char, 3); */
-/* 			if (is_bgreq(read_char)) */
-/* 			{ */
-/* 				/\* printf("Todo : put in background"); *\/ */
-/* 				term.c_lflag |= ICANON; */
-/* 				term.c_lflag |= ECHO; */
-/* 				tcsetattr(0, 0, &term); */
-/* 				tputs(tgetstr("ti", NULL), 1, tputs_putchar); */
-/* 			} */
-/* 			if (is_rtn(read_char)) */
-/* 			{ */
-/* 				term.c_lflag |= ICANON; */
-/* 				term.c_lflag |= ECHO; */
-/* 				tcsetattr(0, 0, &term); /\* back to default values *\/ */
-/* 				tputs(tgetstr("ti", NULL), 1, tputs_putchar); */
-/* 				return (1); */
-/* 			} */
-/* 			if (is_arrow(read_char) != -1) */
-/* 			{ */
-/* 				; */
-/* 				/\* printf("Todo\n"); *\/ */
-/* 				/\* tputs(tgetstr("do", NULL), 1, tputs_putchar); *\/ */
-/* 				/\* printf("%d %d %d\n", read_char[0], read_char[1], read_char[2]); *\/ */
-/* 			} */
-/* 			else */
-/* 				printf("%d %d %d\n", read_char[0], read_char[1], read_char[2]); */
-/* 		} */
-/* 		free(d.arg); */
-/* 	} */
-/* 	return (0); */
-/* } */
