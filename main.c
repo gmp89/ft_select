@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/07 21:52:28 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/07 22:04:34 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	print_list_us(t_list *list, t_data *d)
 			tmp = tmp->next;
 		}
 	}
-	if ((tmp->index + 1) == d->pos && d->is == 1)
+	if ((tmp->index + 1) == d->pos && d->us == 1)
 	{
 		tputs(tgetstr("us", NULL), 1, tputs_putchar);
 		ft_putstr(tmp->str);
@@ -144,11 +144,15 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 	{
 		tputs(tgoto(tgetstr("cm", NULL), 0, 0), 1, tputs_putchar);
 		d->pos = (d->pos + 1) - d->pos_init;
+		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		print_list_us(list, d);
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
 	{
 		tputs(tgetstr("do", NULL), 1, tputs_putchar);
 		d->pos += 1;
+		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		print_list_us(list, d);
 	}
 	else if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 65) && d->pos == 1)
 	{
@@ -156,13 +160,15 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		while (++i <= d->pos_init)
 			tputs(tgetstr("do", NULL), 1, tputs_putchar);
 		d->pos = d->pos_init;
+		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+		print_list_us(list, d);
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
 	{
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		tputs(tgetstr("up", NULL), 1, tputs_putchar);
-		print_list_us(list, d);
 		d->pos -= 1;
+		print_list_us(list, d);
 	}
 	else
 		return (-1);
@@ -382,6 +388,7 @@ int		main(int ac, char **av/* , char **env */)
 	print_list_us(list, &d);
 	/* ft_print_tab(d.arg); */
 	tputs(tgetstr("up", NULL), 1, tputs_putchar);
+	d.us = 1;
 	ft_while(&d, &term, list);
 //	ft_set_tabs();
 //	ft_print(argc, argv);
