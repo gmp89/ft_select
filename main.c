@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 19:06:06 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/08 23:17:16 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,9 @@ int		main(int ac, char **av/* , char **env */)
 	if(ft_set_stage(ac, &term))
 	ft_get_size(&d);
 	make_header(&d);
+	get_col_nb(&d);
 	print_list_us(list, &d);
+	/* print_multi_tab(list, &d); */
 	/* tputs(tgetstr("vi", NULL), 1, tputs_putchar); */
 	/* d.us = 1; */
 	ft_while(&d, &term, list);

@@ -6,12 +6,14 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 18:52:06 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/08 23:14:11 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HEADER_H
 # define HEADER_H
+# define YES 1
+# define NO 0
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -43,6 +45,12 @@ typedef struct		s_data
 	int				us;
 	int				save_us;
 	int				max_length;
+	int				nb_arg_init;
+	int				nb_col;
+	int				needed;
+	int				pos_tab;
+	int				printed_col;
+	int				first;
 }					t_data;
 
 typedef struct		s_list
@@ -81,5 +89,8 @@ int		ft_calc_center(t_data *d);
 void	ft_put_center(t_data *d);
 int		max_lenght(t_list **list, int nb);
 void	index_list(t_list **list, t_data *d);
+void	get_col_nb(t_data *d);
+void	put_tab(int pos_t, t_data *d);
+void	print_multi_tab(t_list *list, t_data *d);
 
 #endif
