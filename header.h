@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/07 22:19:37 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/08 15:45:24 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct		s_list
 	struct s_list	*prev;
 }					t_list;
 
-int		ft_get_size(t_list *size);
+int		ft_get_size(t_data *d);
 int		ft_set_stage(int argc, struct termios *term);
 void	ft_print_tab(char **tabs);
 int		ft_store(t_data *d, char **av, int ac);
@@ -72,6 +72,9 @@ void	print_list_if(t_list *list, t_data *d);
 int		is_select(t_list *list, t_data *d);
 int		is_us(t_list *list, t_data *d);
 void	print_list_us(t_list *list, t_data *d);
-void	make_header(void);
+void	make_header(t_data *d);
+void	make_header_bot(t_data *d);
+int		ft_calc_center(t_data *d);
+void	ft_put_center(t_data *d);
 
 #endif
