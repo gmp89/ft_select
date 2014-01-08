@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 15:45:24 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/08 18:52:06 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ typedef struct		s_data
 	int				save_selected;
 	int				us;
 	int				save_us;
+	int				max_length;
 }					t_data;
 
 typedef struct		s_list
 {
+	int				pos;
 	int				index;
+	int				length;
 	char			*str;
 	int				li;
 	int				co;
@@ -63,7 +66,7 @@ int		is_bgreq(char *buf);
 int		is_arrow(char *buf, t_data *d, t_list *list);
 int		is_rtn(char *buf);
 void	add_element_end(t_list **list, t_list *new);
-t_list 	*ft_make_list(char **av);
+t_list 	*ft_make_list(char **av, t_data *d);
 void	print_list(t_list *list, t_data *d);
 void	add_new_element(t_list **list, t_list *new);
 t_list	*new_list(char *str);
@@ -76,5 +79,7 @@ void	make_header(t_data *d);
 void	make_header_bot(t_data *d);
 int		ft_calc_center(t_data *d);
 void	ft_put_center(t_data *d);
+int		max_lenght(t_list **list, int nb);
+void	index_list(t_list **list, t_data *d);
 
 #endif

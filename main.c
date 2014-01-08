@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 15:58:06 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/08 19:06:06 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,43 +52,6 @@ int		is_select(t_list *list, t_data *d)
 	if (d->selected == 1)
 		return (1);
 	return (0);
-}
-
-void	print_list_us(t_list *list, t_data *d)
-{
-	t_list	*tmp;
-
-	tmp = list;
-	while (tmp->next != NULL)
-	{
-		if ((tmp->index + 1) == d->pos)
-		{
-			tputs(tgetstr("us", NULL), 1, tputs_putchar);
-			ft_putstr(tmp->str);
-			ft_putchar('\n');
-			tputs(tgetstr("ue", NULL), 1, tputs_putchar);
-			tmp = tmp->next;
-		}
-		if (tmp->next != NULL)
-		{
-			ft_putstr(tmp->str);
-			ft_putchar('\n');
-			tmp = tmp->next;
-		}
-	}
-	if ((tmp->index + 1) == d->pos && d->us == 1)
-	{
-		tputs(tgetstr("us", NULL), 1, tputs_putchar);
-		ft_putstr(tmp->str);
-		ft_putchar('\n');
-		tputs(tgetstr("ue", NULL), 1, tputs_putchar);
-		tmp = tmp->next;
-	}
-	else
-	{
-		ft_putstr(tmp->str);
-		ft_putchar('\n');
-	}
 }
 
 int		is_arrow(char *buf, t_data *d, t_list *list)
@@ -199,12 +162,12 @@ int		main(int ac, char **av/* , char **env */)
 	d.max_row = --ac;
 	d.pos_init = d.max_row;
 	d.pos = d.pos_init;
-	list = ft_make_list(av);
+	list = ft_make_list(av, &d);
 	if(ft_set_stage(ac, &term))
 	ft_get_size(&d);
 	make_header(&d);
 	print_list_us(list, &d);
-	tputs(tgetstr("vi", NULL), 1, tputs_putchar);
+	/* tputs(tgetstr("vi", NULL), 1, tputs_putchar); */
 	/* d.us = 1; */
 	ft_while(&d, &term, list);
 //	ft_set_tabs();

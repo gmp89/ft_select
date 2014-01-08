@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/08 14:11:35 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 15:55:00 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/08 18:34:18 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,19 @@ void	ft_put_center(t_data *d)
 	{
 		ft_putchar(' ');
 		i++;
+	}
+}
+
+void	get_length(t_list **list)
+{
+	t_list	*tmp;
+
+	tmp = *list;
+	while (tmp->next != NULL)
+	{
+		tmp->length = ft_strlen(tmp->str);
+		ft_putnbr(tmp->length);
+		ft_putchar('\n');
+		tmp = tmp->next;
 	}
 }
