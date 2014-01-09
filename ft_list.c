@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/08 14:09:42 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 23:17:01 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 18:37:03 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,112 +34,123 @@ void	add_element_end(t_list **list, t_list *new)
 	new->prev = tmp;
 }
 
-void	put_tab(int pos_t, t_data *d)
+void	put_tab(int length, t_data *d)
 {
 	int		i;
+	int		j;
 
 	i = 0;
-	d->printed_col = 1;
-	while (i < pos_t)
+	j = d->printed_col;
+	d->pos_t = (d->col_tmp / 2) - (length / 2);
+	if (d->printed_col > 0)
 	{
-		ft_putchar(' ');
+		while (j != 0)
+		{
+			d->pos_t = d->pos_t + d->col_tmp;
+			j--;
+		}
+	}
+	while (i < d->pos_t)
+	{
+		/* ft_putchar(' '); */
 		i++;
 	}
 }
 
-/* void	print_multi_tab(t_list *list, t_data *d) */
-/* { */
-/* 	int		arg_printed; */
-/* 	t_list	*tmp; */
-/* 	int		col_tmp; */
+void	print_multi_tab(t_list *list, t_data *d)
+{
+	/* int		arg_printed; */
+	t_list	*tmp;
+	/* int		col_tmp; */
 
-/* 	tmp = list; */
-/* 	arg_printed = 0; */
-/* 	col_tmp = d->col / d->needed; */
-/* 	d->first = YES; */
-/* 	while (tmp->next != NULL) */
-/* 	{ */
-/* 		if ((tmp->index + 1) == d->pos) */
-/* 		{ */
-/* 			if ((arg_printed + 1) < d->li) */
-/* 			{ */
-/* 				if (d->first == YES) */
-/* 				{ */
-/* 					d->pos_tab = (col_tmp / 2) - (tmp->length / 2); */
-/* 					d->first = NO; */
-/* 				} */
-/* 				put_tab(d->pos_tab, d); */
-/* 			} */
-/* 			else */
-/* 			{ */
-/* 				d->pos_tab = d->pos_tab + col_tmp; */
-/* 				tputs(tgoto(tgetstr("cm", NULL), d->pos_tab, 0), 1, tputs_putchar); */
-/* 				/\* put_tab(d->pos_tab, d); *\/ */
-/* 			} */
-/* 			tputs(tgetstr("us", NULL), 1, tputs_putchar); */
-/* 			ft_putstr(tmp->str); */
-/* 			arg_printed++; */
-/* 			ft_putchar('\n'); */
-/* 			tputs(tgetstr("ue", NULL), 1, tputs_putchar); */
-/* 			tmp = tmp->next; */
-/* 		} */
-/* 		if (tmp->next != NULL) */
-/* 		{ */
-/* 			if ((arg_printed + 1) < d->li) */
-/* 			{ */
-/* 				d->pos_tab = (col_tmp / 2) - (tmp->length / 2); */
-/* 				put_tab(d->pos_tab, d); */
-/* 			} */
-/* 			else */
-/* 			{ */
-/* 				d->pos_tab = d->pos_tab + col_tmp; */
-/* 				tputs(tgoto(tgetstr("cm", NULL), d->pos_tab, 0), 1, tputs_putchar); */
-/* 				/\* put_tab(d->pos_tab, d); *\/ */
-/* 			} */
-/* 			ft_putstr(tmp->str); */
-/* 			arg_printed++; */
-/* 			ft_putchar('\n'); */
-/* 			tmp = tmp->next; */
-/* 		} */
-/* 	} */
-/* 	if ((tmp->index + 1) == d->pos && d->us == 1) */
-/* 	{ */
-/* 		if ((arg_printed + 1) < d->li) */
-/* 		{ */
-/* 			d->pos_tab = (col_tmp / 2) - (tmp->length / 2); */
-/* 			put_tab(d->pos_tab, d); */
-/* 		} */
-/* 		else */
-/* 		{ */
-/* 			d->pos_tab = d->pos_tab + col_tmp; */
-/* 			tputs(tgoto(tgetstr("cm", NULL), d->pos_tab, 0), 1, tputs_putchar); */
-/* 			/\* put_tab(d->pos_tab, d); *\/ */
-/* 		} */
-/* 		tputs(tgetstr("us", NULL), 1, tputs_putchar); */
-/* 		ft_putstr(tmp->str); */
-/* 		arg_printed++; */
-/* 		ft_putchar('\n'); */
-/* 		tputs(tgetstr("ue", NULL), 1, tputs_putchar); */
-/* 		tmp = tmp->next; */
-/* 	} */
-/* 	else */
-/* 	{ */
-/* 		if ((arg_printed + 1) < d->li) */
-/* 		{ */
-/* 			d->pos_tab = (col_tmp / 2) - (tmp->length / 2); */
-/* 			put_tab(d->pos_tab, d); */
-/* 		} */
-/* 		else */
-/* 		{ */
-/* 			d->pos_tab = d->pos_tab + col_tmp; */
-/* 			tputs(tgoto(tgetstr("cm", NULL), d->pos_tab, 0), 1, tputs_putchar); */
-/* 			/\* put_tab(d->pos_tab, d); *\/ */
-/* 		} */
-/* 		ft_putstr(tmp->str); */
-/* 		arg_printed++; */
-/* 		ft_putchar('\n'); */
-/* 	} */
-/* } */
+	tmp = list;
+	d->arg_printed = 0;
+	d->col_tmp = d->col / d->needed;
+	d->first = YES;
+	d->printed_col = 0;
+	while (tmp->next != NULL)
+	{
+		if ((tmp->index + 1) == d->pos)
+		{
+			/* if ((arg_printed + 1) == d->li) */
+			/* { */
+			/* 	arg_printed = 0; */
+			/* 	col_tmp = col_tmp * 2; */
+			/* 	tputs(tgoto(tgetstr("cm", NULL), d->pos_tab, 0), 1, tputs_putchar); */
+			/* } */
+			if ((d->arg_printed + 10) == d->li)
+			{
+				d->printed_col++;
+				d->arg_printed = 0;
+			}
+			put_tab(tmp->length, d);
+			tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
+			tputs(tgetstr("us", NULL), 1, tputs_putchar);
+			if (tmp->is_selected == YES)
+				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			ft_putstr(tmp->str);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+			d->arg_printed++;
+			ft_putchar('\n');
+			tputs(tgetstr("ue", NULL), 1, tputs_putchar);
+			tmp = tmp->next;
+		}
+		if (tmp->next != NULL)
+		{
+			if ((d->arg_printed + 10) == d->li)
+			{
+				d->printed_col++;
+				d->arg_printed = 0;
+			}
+			put_tab(tmp->length, d);
+			tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
+			if (tmp->is_selected == YES)
+				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			ft_putstr(tmp->str);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+			d->arg_printed++;
+			ft_putchar('\n');
+			tmp = tmp->next;
+		}
+	}
+	if ((tmp->index + 1) == d->pos && d->us == 1)
+	{
+		if ((d->arg_printed + 10) == d->li)
+		{
+			d->printed_col++;
+			d->arg_printed = 0;
+		}
+		put_tab(tmp->length, d);
+		tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
+		tputs(tgetstr("us", NULL), 1, tputs_putchar);
+		if (tmp->is_selected == YES)
+				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			ft_putstr(tmp->str);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+		d->arg_printed++;
+		ft_putchar('\n');
+		tputs(tgetstr("ue", NULL), 1, tputs_putchar);
+		tmp = tmp->next;
+	}
+	else
+	{
+		if ((d->arg_printed + 10) == d->li)
+		{
+			d->printed_col++;
+			d->arg_printed = 0;
+		}
+		put_tab(tmp->length, d);
+		tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
+		if (tmp->is_selected == YES)
+			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+		ft_putstr(tmp->str);
+		tputs(tgetstr("me", NULL), 1, tputs_putchar);
+		d->arg_printed++;
+		ft_putchar('\n');
+	}
+	d->is = 1;
+	d->selected = 1;
+}
 
 void	get_col_nb(t_data *d)
 {
@@ -212,6 +223,7 @@ void		index_list(t_list **list, t_data *d)
 		tmp->length = ft_strlen(tmp->str);
 		tmp->pos = (d->col / 2) - (tmp->length / 2);
 		tmp->index = i;
+		tmp->is_selected = NO;
 		i++;
 	}
 	d->nb_col = d->max_row;
@@ -252,34 +264,74 @@ void	print_list(t_list *list, t_data *d)
 	t_list	*tmp;
 
 	tmp = list;
+	d->arg_printed = 0;
+	d->col_tmp = d->col / d->needed;
+	d->first = YES;
+	d->printed_col = 0;
 	while (tmp->next != NULL)
 	{
-		put_arg_center(tmp->length, d);
+		if ((d->arg_printed + 10) == d->li)
+		{
+			d->printed_col++;
+			d->arg_printed = 0;
+		}
+		put_tab(tmp->length, d);
+		tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
 		ft_putstr(tmp->str);
+		d->arg_printed++;
 		/* ft_putnbr(tmp->index); */
 		ft_putchar('\n');
 		tmp = tmp->next;
 	}
-	put_arg_center(tmp->length, d);
+	if ((d->arg_printed + 10) == d->li)
+	{
+		d->printed_col++;
+		d->arg_printed = 0;
+	}
+	put_tab(tmp->length, d);
+	tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
 	ft_putstr(tmp->str);
+	d->arg_printed++;
 	/* ft_putnbr(tmp->index); */
 	ft_putchar('\n');
 	d->selected = 0;
 }
+
+
 
 void	print_list_if(t_list *list, t_data *d)
 {
 	t_list	*tmp;
 
 	tmp = list;
+	d->arg_printed = 0;
+	d->col_tmp = d->col / d->needed;
+	d->first = YES;
+	d->printed_col = 0;
 	while (tmp->next != NULL)
 	{
 		if ((tmp->index + 1) == d->pos)
 		{
-			put_arg_center(tmp->length, d);
-			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			if (tmp->is_selected == YES)
+			{
+				tmp->is_selected = NO;
+				tputs(tgetstr("me", NULL), 1, tputs_putchar);
+			}
+			else if (tmp->is_selected == NO)
+			{
+				tmp->is_selected = YES;
+				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			}
+			if ((d->arg_printed + 10) == d->li)
+			{
+				d->printed_col++;
+				d->arg_printed = 0;
+			}
+			put_tab(tmp->length, d);
+			tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
 			tputs(tgetstr("us", NULL), 1, tputs_putchar);
 			ft_putstr(tmp->str);
+			d->arg_printed++;
 			ft_putchar('\n');
 			tputs(tgetstr("ue", NULL), 1, tputs_putchar);
 			tputs(tgetstr("me", NULL), 1, tputs_putchar);
@@ -287,18 +339,36 @@ void	print_list_if(t_list *list, t_data *d)
 		}
 		if (tmp->next != NULL)
 		{
-			put_arg_center(tmp->length, d);
+			if ((d->arg_printed + 10) == d->li)
+			{
+				d->printed_col++;
+				d->arg_printed = 0;
+			}
+			put_tab(tmp->length, d);
+			tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
+			if (tmp->is_selected == YES)
+				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 			ft_putstr(tmp->str);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+			d->arg_printed++;
 			ft_putchar('\n');
 			tmp = tmp->next;
+			}
 		}
-	}
 	if ((tmp->index + 1) == d->pos && d->is == 1)
 	{
-		put_arg_center(tmp->length, d);
-		tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+		if ((d->arg_printed + 10) == d->li)
+		{
+			d->printed_col++;
+			d->arg_printed = 0;
+		}
+		put_tab(tmp->length, d);
+		tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
+		if (tmp->is_selected == YES)
+			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 		tputs(tgetstr("us", NULL), 1, tputs_putchar);
 		ft_putstr(tmp->str);
+		d->arg_printed++;
 		ft_putchar('\n');
 		tputs(tgetstr("ue", NULL), 1, tputs_putchar);
 		tputs(tgetstr("me", NULL), 1, tputs_putchar);
@@ -306,8 +376,15 @@ void	print_list_if(t_list *list, t_data *d)
 	}
 	else
 	{
-		put_arg_center(tmp->length, d);
+		if ((d->arg_printed + 10) == d->li)
+		{
+			d->printed_col++;
+			d->arg_printed = 0;
+		}
+		put_tab(tmp->length, d);
+		tputs(tgoto(tgetstr("cm", NULL), d->pos_t, (d->arg_printed + 10)), 1, tputs_putchar);
 		ft_putstr(tmp->str);
+		d->arg_printed++;
 		ft_putchar('\n');
 	}
 	d->is = 1;

@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,7 +7,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 23:14:11 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 15:50:45 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +52,14 @@ typedef struct		s_data
 	int				pos_tab;
 	int				printed_col;
 	int				first;
+	int				arg_printed;
+	int				col_tmp;
+	int				pos_t;
 }					t_data;
 
 typedef struct		s_list
 {
+	int				is_selected;
 	int				pos;
 	int				index;
 	int				length;

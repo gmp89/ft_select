@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/08 23:17:16 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 18:34:49 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		d->pos = (d->pos + 1) - d->pos_init;
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		make_header(d);
-		print_list_us(list, d);
+		/* print_list_us(list, d); */
+		print_multi_tab(list, d);
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
 	{
@@ -74,7 +75,8 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		d->pos += 1;
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		make_header(d);
-		print_list_us(list, d);
+		/* print_list_us(list, d); */
+		print_multi_tab(list, d);
 	}
 	else if ((buf[0] == 27 && buf[1] == 91 && buf[2] == 65) && d->pos == 1)
 	{
@@ -84,7 +86,8 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		d->pos = d->pos_init;
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		make_header(d);
-		print_list_us(list, d);
+		/* print_list_us(list, d); */
+		print_multi_tab(list, d);
 	}
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
 	{
@@ -92,7 +95,8 @@ int		is_arrow(char *buf, t_data *d, t_list *list)
 		tputs(tgetstr("up", NULL), 1, tputs_putchar);
 		d->pos -= 1;
 		make_header(d);
-		print_list_us(list, d);
+		/* print_list_us(list, d); */
+		print_multi_tab(list, d);
 	}
 	else
 		return (-1);
@@ -108,10 +112,12 @@ int		is_spc(char *buf, t_list *list, t_data *d)
 	{
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		make_header(d);
-		if (is_select(list, d) == 0)
-			print_list_if(list, d);
-		else
-			print_list(list, d);
+		print_list_if(list, d);
+		/* tputs(tgetstr("do", NULL), 1, tputs_putchar); */
+		/* d->pos += 1; */
+		/* tputs(tgetstr("cl", NULL), 1, tputs_putchar); */
+		/* make_header(d); */
+		/* print_list_if(list, d); */
 		while (i-- >= d->pos)
 			tputs(tgetstr("up", NULL), 1, tputs_putchar);
 		return (0);
@@ -167,8 +173,8 @@ int		main(int ac, char **av/* , char **env */)
 	ft_get_size(&d);
 	make_header(&d);
 	get_col_nb(&d);
-	print_list_us(list, &d);
-	/* print_multi_tab(list, &d); */
+	/* print_list_us(list, &d); */
+	print_multi_tab(list, &d);
 	/* tputs(tgetstr("vi", NULL), 1, tputs_putchar); */
 	/* d.us = 1; */
 	ft_while(&d, &term, list);
