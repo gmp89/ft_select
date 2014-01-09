@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/08 14:09:42 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/09 18:37:03 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 22:46:02 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,37 @@ int		max_lenght(t_list **list, int nb)
 	}
 	return (max);
 }
+
+t_list		*ft_del_elem(t_list *list, t_data *d)
+{
+	t_list	*tmp;
+    /* Liste vide, il n'y a plus rien à supprimer */
+    if (list == NULL)
+        return (NULL); 
+    /* Si l'élément en cours de traitement doit être supprimé */
+    if(list->is_selected == YES)
+    {
+        /* On le supprime en prenant soin de mémoriser 
+		   l'adresse de l'élément suivant */
+        tmp = list->next;
+        free(list);
+        /* L'élément ayant été supprimé, la liste commencera à l'élément suivant
+		   pointant sur une liste qui ne contient plus aucun élément ayant la valeur recherchée */
+        tmp = ft_del_elem(tmp, d);
+        return tmp;
+    }
+    else
+    {
+        /* Si l'élement en cours de traitement ne doit pas être supprimé,
+        alors la liste finale commencera par cet élément et suivra une liste ne contenant
+        plus d'élément ayant la valeur recherchée */
+        list->next = ft_del_elem(list->next, d);
+        return (list);
+    }
+	index_list(&list, d);
+	print_multi_tab(list, d);
+}
+
 
 void		index_list(t_list **list, t_data *d)
 {

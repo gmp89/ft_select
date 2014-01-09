@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/09 21:18:37 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 22:46:17 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,14 @@ int		is_resize(char *buf, t_data *d, t_list *list, struct termios *term)
 	return (0);
 }
 
+int		is_rtn(char *buf)
+{
+	return (buf[0] == 10);
+}
+
 int		ft_while(t_data *d, struct termios *term, t_list *list)
 {
-		while (ft_strcmp(d->read_char, "exit") != 0)
+	while (!is_rtn(d->read_char))
 		{
 			read(0, d->read_char, 3);
 			/* if (is_bgreq(d->read_char)) */
@@ -185,10 +190,17 @@ int		ft_while(t_data *d, struct termios *term, t_list *list)
 				;
 			else if (is_spc(d->read_char,  list, d) == 0)
 				;
+			else if (is_del(d->read_char))
+				ft_del_elem(list, d);
 			else
 				printf("%d %d %d\n", d->read_char[0], d->read_char[1], d->read_char[2]);
 		}
 		return (0);
+}
+
+int		is_del(char *buf)
+{
+	return (buf[0] == 127 && buf[1] == 91);
 }
 
 int		main(int ac, char **av/* , char **env */)
@@ -212,16 +224,13 @@ int		main(int ac, char **av/* , char **env */)
 	ft_signals();
 	/* print_list_us(list, &d); */
 	print_multi_tab(list, &d);
-	/* tputs(tgetstr("vi", NULL), 1, tputs_putchar); */
+	tputs(tgetstr("vi", NULL), 1, tputs_putchar);
 	/* d.us = 1; */
 	ft_while(&d, &term, list);
+	unset_stage(&term);
 //	ft_set_tabs();
 //	ft_wait_for_input();
 	return (0);
 }
 
-int		is_rtn(char *buf)
-{
-	return (buf[0] == 10);
-}
 

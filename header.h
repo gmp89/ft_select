@@ -7,7 +7,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/09 21:11:22 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 22:43:08 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,7 @@ void	resize(int i);
 int		get_size(t_data *d);
 int		unset_stage(struct termios *term);
 int		set_stage(struct termios *term);
+t_list 	*ft_del_elem(t_list *list, t_data *d);
+int		is_del(char *buf);
 
 #endif
