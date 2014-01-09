@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/09 18:34:49 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 21:18:37 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,44 @@ int		is_spc(char *buf, t_list *list, t_data *d)
 		/* tputs(tgetstr("cl", NULL), 1, tputs_putchar); */
 		/* make_header(d); */
 		/* print_list_if(list, d); */
+		if (d->pos == d->pos_init)
+		{
+			tputs(tgoto(tgetstr("cm", NULL), 0, 0), 1, tputs_putchar);
+			d->pos = (d->pos + 1) - d->pos_init;
+			tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+			make_header(d);
+			/* print_list_us(list, d); */
+			print_multi_tab(list, d);
+		}
+		else
+		{
+			tputs(tgetstr("do", NULL), 1, tputs_putchar);
+			d->pos += 1;
+			tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+			make_header(d);
+			/* print_list_us(list, d); */
+			print_multi_tab(list, d);
+		}
 		while (i-- >= d->pos)
 			tputs(tgetstr("up", NULL), 1, tputs_putchar);
 		return (0);
 	}
 	else
 		return (-1);
+}
+
+int		is_resize(char *buf, t_data *d, t_list *list, struct termios *term)
+{
+	if (buf[0] == -62)
+	{
+		unset_stage(term);
+		set_stage(term);
+		get_size(d);
+		make_header(d);
+		print_multi_tab(list, d);
+		return (1);
+	}
+	return (0);
 }
 
 int		ft_while(t_data *d, struct termios *term, t_list *list)
@@ -147,9 +179,11 @@ int		ft_while(t_data *d, struct termios *term, t_list *list)
 				tputs(tgetstr("ti", NULL), 1, tputs_putchar);
 				return (1);
 			}
-			if (is_arrow(d->read_char, d, list) == 0)
+			if (is_resize(d->read_char, d, list, term) == 1)
 				;
-			else if (is_spc(d->read_char, list, d) == 0)
+			else if (is_arrow(d->read_char, d, list) == 0)
+				;
+			else if (is_spc(d->read_char,  list, d) == 0)
 				;
 			else
 				printf("%d %d %d\n", d->read_char[0], d->read_char[1], d->read_char[2]);
@@ -164,6 +198,8 @@ int		main(int ac, char **av/* , char **env */)
 	t_data			d;
 	t_list			*list;
 
+	if (ac <= 1)
+		return (0);
 	list = NULL;
 	d.max_row = --ac;
 	d.pos_init = d.max_row;
@@ -173,6 +209,7 @@ int		main(int ac, char **av/* , char **env */)
 	ft_get_size(&d);
 	make_header(&d);
 	get_col_nb(&d);
+	ft_signals();
 	/* print_list_us(list, &d); */
 	print_multi_tab(list, &d);
 	/* tputs(tgetstr("vi", NULL), 1, tputs_putchar); */

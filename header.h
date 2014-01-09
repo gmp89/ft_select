@@ -7,7 +7,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/09 15:50:45 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/09 21:11:22 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 # define HEADER_H
 # define YES 1
 # define NO 0
+# define FD 2
 
+# include <sys/ioctl.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <termios.h>
@@ -97,5 +99,11 @@ void	index_list(t_list **list, t_data *d);
 void	get_col_nb(t_data *d);
 void	put_tab(int pos_t, t_data *d);
 void	print_multi_tab(t_list *list, t_data *d);
+void	ft_signals(void);
+void	cont(int i);
+void	resize(int i);
+int		get_size(t_data *d);
+int		unset_stage(struct termios *term);
+int		set_stage(struct termios *term);
 
 #endif
