@@ -6,12 +6,13 @@
 #    By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/03 17:21:43 by gpetrov           #+#    #+#              #
-#    Updated: 2014/01/08 14:40:55 by gpetrov          ###   ########.fr        #
+#    Updated: 2014/01/10 17:30:39 by gpetrov          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME	= ft_select
-SRCS	= main.c ft_list.c tools.c
+SRCS	= main.c ft_list.c ft_list2.c tools.c ft_multi.c ft_if.c ft_arrow.c\
+		ft_is.c ft_is2.c tools2.c tools3.c
 OBJS	= ${SRCS:.c=.o}
 INC		= ./
 FLAGS	= -Wall -Wextra -Werror
@@ -20,12 +21,14 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C libft
-	cc $(FLAGS) $(SRCS) -o $(NAME) -I libft/includes -L libft/ -lft -L /usr/lib -ltermcap
+	cc $(FLAGS) $(SRCS) -o $(NAME) -I libft/includes\
+	 -L libft/ -lft -L /usr/lib -ltermcap
 %.o: %.c
 	cc -c $< -o $@ $(FLAGS) -I$(INC)
 gdb:
 	make -C libft
-	cc -g $(FLAGS) $(SRCS) -o $(NAME) -I libft/includes -L libft/ -lft -L /usr/lib -ltermcap
+	cc -g $(FLAGS) $(SRCS) -o $(NAME) -I libft/includes\
+	 -L libft/ -lft -L /usr/lib -ltermcap
 	gdb $(NAME)
 clean:
 	rm -f $(OBJS)

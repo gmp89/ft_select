@@ -1,4 +1,3 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/09 22:43:08 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/10 19:16:43 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +15,7 @@
 # define YES 1
 # define NO 0
 # define FD 2
+# define PU (d->arg_printed + 10)), 1, tputs_putchar
 
 # include <sys/ioctl.h>
 # include <unistd.h>
@@ -107,5 +107,20 @@ int		unset_stage(struct termios *term);
 int		set_stage(struct termios *term);
 t_list 	*ft_del_elem(t_list *list, t_data *d);
 int		is_del(char *buf);
+int		is_resize(char *buf, t_data *d, t_list *list, struct termios *term);
+t_list	*ft_multi_1(t_list *tmp, t_data *d);
+t_list	*ft_multi_2(t_list *tmp, t_data *d);
+t_list	*ft_multi_3(t_list *tmp, t_data *d);
+t_list	*ft_multi_4(t_list *tmp, t_data *d);
+t_list	*ft_if_1(t_list *tmp, t_data *d);
+t_list	*ft_if_2(t_list *tmp, t_data *d);
+t_list	*ft_if_3(t_list *tmp, t_data *d);
+t_list	*ft_if_4(t_list *tmp, t_data *d);
+void	is_spc_1(t_list *list, t_data *d);
+void	is_spc_2(t_list *list, t_data *d);
+void	ft_arrow_1(t_list *list, t_data *d);
+void	ft_arrow_2(t_list *list, t_data *d);
+void	ft_arrow_3(t_list *list, t_data *d);
+void	ft_arrow_4(t_list *list, t_data *d);
 
 #endif
