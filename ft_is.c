@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 17:13:16 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 17:13:51 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 20:04:17 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ int		is_spc(char *buf, t_list *list, t_data *d)
 	int		i;
 
 	i = d->pos_init;
-	if (buf[0] == 32 && buf[1] == 91)
+	if (buf[0] == 32 && buf[1] == 0 && buf[2] == 0)
 	{
+		ft_putnbr(d->pos_init);
 		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 		make_header(d);
 		print_list_if(list, d);

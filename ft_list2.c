@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 16:50:02 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 20:00:56 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 20:20:30 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ static int	ft_del_this_elem(t_list **list, t_list *elt)
 	{
 		if (*list == elt)
 			*list = NULL;
+		else
+			(elt->prev)->next = NULL;
 		free(elt);
 		return (0);
 	}
@@ -103,19 +105,26 @@ t_list		*ft_del_elem(t_list *list, t_data *d)
 	{
 		if (tmp->is_selected == YES)
 		{
+			if (tmp->index != 1)
+				tputs(tgetstr("up", NULL), 1, tputs_putchar);
 			ft_del_this_elem(&list, tmp);
 			/* d->pos--; */
-			/* d->pos_init--; */
+			d->pos = d->pos % (d->tot + 1);
+			if (d->pos >= d->pos_init || d->pos < 1)
+				d->pos = d->pos_init - 1;
+			d->pos_init--;
 		}
-		tmp = tmp->next;
+		if (tmp != NULL)
+			tmp = tmp->next;
 	}
+	if (list == NULL)
+		exit(0);
 	index_list(&list, d);
 	tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 	make_header(d);
 	print_multi_tab(list, d);
 	return (list);
 }
-
 
 void		index_list(t_list **list, t_data *d)
 {
@@ -124,17 +133,22 @@ void		index_list(t_list **list, t_data *d)
 
 	i = 1;
 	tmp = *list;
-	tmp->length = ft_strlen(tmp->str);
+	tmp->length = (int)ft_strlen(tmp->str);
 	tmp->pos = (d->col / 2) - (tmp->length / 2);
 	while (tmp->next != NULL)
 	{
-		tmp = tmp->next;
-		tmp->length = ft_strlen(tmp->str);
+		tmp->length = (int)ft_strlen(tmp->str);
 		tmp->pos = (d->col / 2) - (tmp->length / 2);
 		tmp->index = i;
 		tmp->is_selected = NO;
 		i++;
+		tmp = tmp->next;
 	}
+	d->tot = i;
+	tmp->length = (int)ft_strlen(tmp->str);
+	tmp->pos = (d->col / 2) - (tmp->length / 2);
+	tmp->index = i;
+	tmp->is_selected = NO;
 	d->nb_col = d->max_row;
 	d->max_length = max_lenght(list, i);
 }

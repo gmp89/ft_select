@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 19:16:43 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 20:12:26 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 
 typedef struct		s_data
 {
+	int				tot;
 	int				i;
 	int				j;
 	char			**arg;
@@ -122,5 +123,6 @@ void	ft_arrow_1(t_list *list, t_data *d);
 void	ft_arrow_2(t_list *list, t_data *d);
 void	ft_arrow_3(t_list *list, t_data *d);
 void	ft_arrow_4(t_list *list, t_data *d);
+void	final_print(t_list *list);
 
 #endif

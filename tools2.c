@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 17:28:19 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 17:44:28 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 16:04:47 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		ft_get_size(t_data *d)
 
 int		tputs_putchar(int c)
 {
-	write(1, &c, 1);
+	write(isatty(STDOUT_FILENO), &c, 1);
 	return (1);
 }
 

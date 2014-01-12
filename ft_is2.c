@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 17:14:30 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 17:16:32 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 20:05:19 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,5 @@ int		is_rtn(char *buf)
 
 int		is_del(char *buf)
 {
-	return (buf[0] == 127 && buf[1] == 91);
+	return (buf[0] == 127 && buf[1] == 0 && buf[2] == 0);
 }

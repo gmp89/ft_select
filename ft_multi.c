@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 16:40:01 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 18:17:48 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 19:09:21 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_list	*ft_multi_1(t_list *tmp, t_data *d)
 			if (tmp->is_selected == YES)
 				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 			ft_putstr(tmp->str);
+			ft_putnbr(tmp->index);
 			tputs(tgetstr("me", NULL), 1, tputs_putchar);
 			d->arg_printed++;
 			ft_putchar('\n');
@@ -50,6 +51,7 @@ t_list	*ft_multi_2(t_list *tmp, t_data *d)
 			if (tmp->is_selected == YES)
 				tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 			ft_putstr(tmp->str);
+			ft_putnbr(tmp->index);
 			tputs(tgetstr("me", NULL), 1, tputs_putchar);
 			d->arg_printed++;
 			ft_putchar('\n');
@@ -71,11 +73,12 @@ t_list	*ft_multi_3(t_list *tmp, t_data *d)
 	if (tmp->is_selected == YES)
 		tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 	ft_putstr(tmp->str);
+	ft_putnbr(tmp->index);
 	tputs(tgetstr("me", NULL), 1, tputs_putchar);
 	d->arg_printed++;
 	ft_putchar('\n');
 	tputs(tgetstr("ue", NULL), 1, tputs_putchar);
-	tmp = tmp->next;
+	/* tmp = tmp->next; */
 	return (tmp);
 }
 
@@ -91,9 +94,11 @@ t_list	*ft_multi_4(t_list *tmp, t_data *d)
 	if (tmp->is_selected == YES)
 		tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 	ft_putstr(tmp->str);
+	ft_putnbr(tmp->index);
 	tputs(tgetstr("me", NULL), 1, tputs_putchar);
 	d->arg_printed++;
-	ft_putchar('\n');
+	/* ft_putchar('\n'); */
+	 /* tmp = tmp->next; */
 	return (tmp);
 }
 
@@ -111,10 +116,14 @@ void	print_multi_tab(t_list *list, t_data *d)
 		tmp = ft_multi_1(tmp, d);
 		tmp = ft_multi_2(tmp, d);
 	}
-	if ((tmp->index + 1) == d->pos && d->us == 1)
+	if (d->pos == 1 && (tmp != NULL)/* (tmp->index + 1) == d->pos && d->us == 1 */)
 		tmp = ft_multi_3(tmp, d);
-	else
+	else if (tmp != NULL)
 		tmp = ft_multi_4(tmp, d);
 	d->is = 1;
 	d->selected = 1;
+	ft_putchar('\n');
+	ft_putnbr(d->pos);
+	ft_putchar('\n');
+	ft_putnbr(d->pos_init);
 }

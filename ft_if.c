@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 16:43:40 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 18:09:22 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 18:05:09 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,16 @@ t_list	*ft_if_2(t_list *tmp, t_data *d)
 
 t_list	*ft_if_3(t_list *tmp, t_data *d)
 {
+	if (tmp->is_selected == YES)
+	{
+		tmp->is_selected = NO;
+		tputs(tgetstr("me", NULL), 1, tputs_putchar);
+	}
+	else if (tmp->is_selected == NO)
+	{
+		tmp->is_selected = YES;
+		tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+	}
 	if ((d->arg_printed + 10) == d->li)
 	{
 		d->printed_col++;
@@ -116,7 +126,7 @@ void	print_list_if(t_list *list, t_data *d)
 			tmp = ft_if_1(tmp, d);
 		tmp = ft_if_2(tmp, d);
 	}
-	if ((tmp->index + 1) == d->pos && d->is == 1)
+	if (d->pos == 1/* (tmp->index + 1) == d->pos && d->is == 1 */)
 		tmp = ft_if_3(tmp, d);
 	else
 		tmp = ft_if_4(tmp , d);
