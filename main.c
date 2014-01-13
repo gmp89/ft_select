@@ -6,11 +6,10 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:00:24 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/12 20:01:52 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 23:33:19 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "header.h"
 
 int		ft_set_stage(int ac, struct termios *term)
@@ -40,52 +39,58 @@ int		ft_set_stage(int ac, struct termios *term)
 void	final_print(t_list *list)
 {
 	t_list	*tmp;
+	int		k;
 
+	k = 1;
 	tmp = list;
 	tputs(tgetstr("cl", NULL), 1, tputs_putchar);
-	while (tmp->next != NULL)
+	while (tmp != NULL)
 	{
 		if (tmp->is_selected == YES)
 		{
+			if (k == 0)
+				ft_putchar(' ');
 			ft_putstr(tmp->str);
-			ft_putchar(' ');
 		}
 		tmp = tmp->next;
+		k = 0;
 	}
-	if (tmp->is_selected == YES)
-		ft_putstr(tmp->str);
 	ft_putchar('\n');
+}
+
+void	ft_quit(struct termios *term)
+{
+	term->c_lflag |= ICANON;
+	term->c_lflag |= ECHO;
+	tcsetattr(0, 0, term);
+	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
+	unset_stage(term);
 }
 
 int		ft_while(t_data *d, struct termios *term, t_list *list)
 {
 	while (42)
+	{
+		ft_bzero(d->read_char, 3);
+		read(0, d->read_char, 3);
+		if (is_rtn(d->read_char))
 		{
-			ft_bzero(d->read_char, 3);
-			read(0, d->read_char, 3);
-			if (is_rtn(d->read_char))
-			{
-				term->c_lflag |= ICANON;
-				term->c_lflag |= ECHO;
-				tcsetattr(0, 0, term);
-				unset_stage(term);
-				final_print(list);
-				return (1);
-			}
-			if (is_resize(d->read_char, d, list, term) == 1)
-				;
-			else if (is_arrow(d->read_char, d, list) == 0)
-					;
-			else if (is_spc(d->read_char,  list, d) == 0)
-				;
-			else if (is_del(d->read_char))
-				list = ft_del_elem(list, d);
-			else
-				printf("%d %d %d\n", d->read_char[0], d->read_char[1], d->read_char[2]);
-			if (list == NULL)
-				break ;
+			ft_quit(term);
+			final_print(list);
+			return (1);
 		}
-		return (0);
+		if (ft_while_help(d, term, list, d->read_char))
+			;
+		else if (is_arrow(d->read_char, d, list) == 0)
+			;
+		else if (is_spc(d->read_char,  list, d) == 0)
+			;
+		else if (is_del(d->read_char))
+			list = ft_del_elem(list, d, term);
+		if (list == NULL)
+			return (0);
+	}
+	return (0);
 }
 
 int		main(int ac, char **av)
@@ -107,10 +112,9 @@ int		main(int ac, char **av)
 	get_col_nb(&d);
 	ft_signals();
 	print_multi_tab(list, &d);
-	/* tputs(tgetstr("vi", NULL), 1, tputs_putchar); */
+	tputs(tgetstr("vi", NULL), 1, tputs_putchar);
 	d.us = 1;
 	ft_while(&d, &term, list);
 	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
-	/* unset_stage(&term); */
 	return (0);
 }

@@ -6,13 +6,13 @@
 #    By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/03 17:21:43 by gpetrov           #+#    #+#              #
-#    Updated: 2014/01/10 17:30:39 by gpetrov          ###   ########.fr        #
+#    Updated: 2014/01/12 22:29:14 by gpetrov          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME	= ft_select
 SRCS	= main.c ft_list.c ft_list2.c tools.c ft_multi.c ft_if.c ft_arrow.c\
-		ft_is.c ft_is2.c tools2.c tools3.c
+		ft_is.c ft_is2.c tools2.c tools3.c signal.c more.c
 OBJS	= ${SRCS:.c=.o}
 INC		= ./
 FLAGS	= -Wall -Wextra -Werror

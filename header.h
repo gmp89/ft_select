@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/03 17:22:25 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/12 20:12:26 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 23:28:24 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define YES 1
 # define NO 0
 # define FD 2
+# define FDD isatty(STDOUT_FILENO)
 # define PU (d->arg_printed + 10)), 1, tputs_putchar
 
 # include <sys/ioctl.h>
@@ -82,7 +83,7 @@ int		is_bgreq(char *buf);
 int		is_arrow(char *buf, t_data *d, t_list *list);
 int		is_rtn(char *buf);
 void	add_element_end(t_list **list, t_list *new);
-t_list 	*ft_make_list(char **av, t_data *d);
+t_list	*ft_make_list(char **av, t_data *d);
 void	print_list(t_list *list, t_data *d);
 void	add_new_element(t_list **list, t_list *new);
 t_list	*new_list(char *str);
@@ -106,7 +107,7 @@ void	resize(int i);
 int		get_size(t_data *d);
 int		unset_stage(struct termios *term);
 int		set_stage(struct termios *term);
-t_list 	*ft_del_elem(t_list *list, t_data *d);
+t_list	*ft_del_elem(t_list *list, t_data *d, struct termios *term);
 int		is_del(char *buf);
 int		is_resize(char *buf, t_data *d, t_list *list, struct termios *term);
 t_list	*ft_multi_1(t_list *tmp, t_data *d);
@@ -124,5 +125,13 @@ void	ft_arrow_2(t_list *list, t_data *d);
 void	ft_arrow_3(t_list *list, t_data *d);
 void	ft_arrow_4(t_list *list, t_data *d);
 void	final_print(t_list *list);
+void	ft_quit(struct termios *term);
+int		is_esc(char *buf);
+void	interupt(int i);
+void	suspend(int i);
+int		is_ctrl_c(char *buf, struct termios *term);
+int		is_ctrl_z(char *buf, struct termios *term);
+t_list	*ft_is_3_bis(t_list *tmp);
+int		ft_while_help(t_data *d, struct termios *term, t_list *list, char *buf);
 
 #endif

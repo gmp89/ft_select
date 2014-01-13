@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 16:50:02 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/12 20:20:30 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 23:32:15 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,40 +39,14 @@ int			max_lenght(t_list **list, int nb)
 	}
 	return (max);
 }
-/*
-t_list		*ft_del_elem(t_list *list, t_data *d)
-{
-	t_list	*tmp;
 
-	if (list == NULL)
-		return (NULL);
-	if (list->is_selected == YES)
-	{
-		tmp = list->next;
-		free(list);
-		tmp = ft_del_elem(tmp, d);
-		index_list(&list, d);
-		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
-		make_header(d);
-		print_multi_tab(list, d);
-		return (tmp);
-	}
-	else
-	{
-		list->next = ft_del_elem(list->next, d);
-		index_list(&list, d);
-		tputs(tgetstr("cl", NULL), 1, tputs_putchar);
-		make_header(d);
-		print_multi_tab(list, d);
-		return (list);
-	}
-}
-*/
-
-static int	ft_del_this_elem(t_list **list, t_list *elt)
+static int	ft_del_this_elem(t_list **list, t_list *elt, struct termios *term)
 {
 	if (*list == NULL)
-		return (0);
+	{
+		ft_quit(term);
+		exit(0);
+	}
 	if (elt->next == NULL)
 	{
 		if (*list == elt)
@@ -87,16 +61,14 @@ static int	ft_del_this_elem(t_list **list, t_list *elt)
 		if (*list == elt)
 			*list = elt->next;
 		if (elt->prev != NULL)
-		{
 			elt->prev->next = elt->next;
-		}
 		elt->next->prev = elt->prev;
 		free(elt);
-        return (1);
-    }
+		return (1);
+	}
 }
 
-t_list		*ft_del_elem(t_list *list, t_data *d)
+t_list		*ft_del_elem(t_list *list, t_data *d, struct termios *term)
 {
 	t_list	*tmp;
 
@@ -107,8 +79,7 @@ t_list		*ft_del_elem(t_list *list, t_data *d)
 		{
 			if (tmp->index != 1)
 				tputs(tgetstr("up", NULL), 1, tputs_putchar);
-			ft_del_this_elem(&list, tmp);
-			/* d->pos--; */
+			ft_del_this_elem(&list, tmp, term);
 			d->pos = d->pos % (d->tot + 1);
 			if (d->pos >= d->pos_init || d->pos < 1)
 				d->pos = d->pos_init - 1;
@@ -118,7 +89,7 @@ t_list		*ft_del_elem(t_list *list, t_data *d)
 			tmp = tmp->next;
 	}
 	if (list == NULL)
-		exit(0);
+		return (0);
 	index_list(&list, d);
 	tputs(tgetstr("cl", NULL), 1, tputs_putchar);
 	make_header(d);
@@ -164,20 +135,4 @@ t_list		*ft_make_list(char **av, t_data *d)
 		add_element_end(&ret, new_list(av[i]));
 	index_list(&ret, d);
 	return (ret);
-}
-
-t_list		*new_list(char *str)
-{
-	t_list	*new_list;
-
-	new_list = (t_list *)malloc(sizeof(t_list));
-	if (new_list == NULL)
-		return (NULL);
-	if (str == NULL)
-		new_list->str = NULL;
-	else
-		new_list->str = ft_strdup(str);
-	new_list->next = NULL;
-	new_list->prev = NULL;
-	return (new_list);
 }

@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/08 14:11:35 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 17:30:23 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 22:54:44 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,37 +16,16 @@ void	ft_signals(void)
 {
 	void	*res;
 	void	*con;
+	void	*inter;
+	void	*susp;
 
+	susp = &suspend;
 	con = &cont;
 	res = &resize;
+	inter = &interupt;
 	signal(SIGWINCH, res);
 	signal(SIGCONT, con);
-}
-
-int		set_stage(struct termios *term)
-{
-	char	buffer[2048];
-
-	if (tgetent(buffer, getenv("TERM")) < 1)
-		return (-1);
-	tcgetattr(0, term);
-	term->c_lflag &= ~(ICANON);
-	term->c_lflag &= ~(ECHO);
-	term->c_cc[VMIN] = 1;
-	term->c_cc[VTIME] = 0;
-	tcsetattr(0, 0, term);
-	return (1);
-}
-
-int		unset_stage(struct termios *term)
-{
-	term->c_lflag |= ICANON;
-	term->c_lflag |= ECHO;
-	tcsetattr(0, 0, term);
-	tputs(tgetstr("me", NULL), 1, tputs_putchar);
-	tputs(tgetstr("cl", NULL), 1, tputs_putchar);
-	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
-	return (1);
+	signal(SIGINT, inter);
 }
 
 int		get_size(t_data *d)
@@ -59,4 +38,18 @@ int		get_size(t_data *d)
 	if ((d->li = ws.ws_row) < 0)
 		return (-1);
 	return (1);
+}
+
+void	cont(int i)
+{
+	char	str[2];
+	char	str2[2];
+
+	(void)i;
+	str[0] = -62;
+	str[1] = '\0';
+	str2[0] = 10;
+	str2[1] = '\0';
+	ioctl(FD, TIOCSTI, str);
+	ioctl(FD, TIOCSTI, str2);
 }

@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 17:29:53 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/10 17:30:24 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 21:26:52 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_put_center(t_data *d)
 	center = ft_calc_center(d);
 	while (i <= center)
 	{
-		ft_putchar(' ');
+		ft_putchar_fd(' ', FDD);
 		i++;
 	}
 }
@@ -54,26 +54,28 @@ void	get_length(t_list **list)
 	}
 }
 
-void	resize(int i)
+int		set_stage(struct termios *term)
 {
-	char	str[2];
+	char	buffer[2048];
 
-	(void)i;
-	str[0] = -62;
-	str[1] = '\0';
-	ioctl(FD, TIOCSTI, str);
+	if (tgetent(buffer, getenv("TERM")) < 1)
+		return (-1);
+	tcgetattr(0, term);
+	term->c_lflag &= ~(ICANON);
+	term->c_lflag &= ~(ECHO);
+	term->c_cc[VMIN] = 1;
+	term->c_cc[VTIME] = 0;
+	tcsetattr(0, 0, term);
+	return (1);
 }
 
-void	cont(int i)
+int		unset_stage(struct termios *term)
 {
-	char	str[2];
-	char	str2[2];
-
-	(void)i;
-	str[0] = -62;
-	str[1] = '\0';
-	str2[0] = 10;
-	str2[1] = '\0';
-	ioctl(FD, TIOCSTI, str);
-	ioctl(FD, TIOCSTI, str2);
+	term->c_lflag |= ICANON;
+	term->c_lflag |= ECHO;
+	tcsetattr(0, 0, term);
+	tputs(tgetstr("me", NULL), 1, tputs_putchar);
+	tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
+	return (1);
 }

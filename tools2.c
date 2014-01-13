@@ -6,7 +6,7 @@
 /*   By: gpetrov <gpetrov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/10 17:28:19 by gpetrov           #+#    #+#             */
-/*   Updated: 2014/01/12 16:04:47 by gpetrov          ###   ########.fr       */
+/*   Updated: 2014/01/12 20:49:51 by gpetrov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,17 @@ int		tputs_putchar(int c)
 void	make_header(t_data *d)
 {
 	ft_put_center(d);
-	ft_putstr("              .__                 __   \n");
+	ft_putstr_fd("              .__                 __   \n", FDD);
 	ft_put_center(d);
-	ft_putstr("  ______ ____ |  |   ____   _____/  |_ \n");
+	ft_putstr_fd("  ______ ____ |  |   ____   _____/  |_ \n", FDD);
 	ft_put_center(d);
-	ft_putstr(" /  ___// __ \\|  | _/ __ \\_/ ___\\   __\\\n");
+	ft_putstr_fd(" /  ___// __ \\|  | _/ __ \\_/ ___\\   __\\\n", FDD);
 	ft_put_center(d);
-	ft_putstr(" \\___ \\\\  ___/|  |_\\  ___/\\  \\___|  |  \n");
+	ft_putstr_fd(" \\___ \\\\  ___/|  |_\\  ___/\\  \\___|  |  \n", FDD);
 	ft_put_center(d);
-	ft_putstr("/____  >\\___  >____/\\___  >\\___  >__|  \n");
+	ft_putstr_fd("/____  >\\___  >____/\\___  >\\___  >__|  \n", FDD);
 	ft_put_center(d);
-	ft_putstr("     \\/     \\/          \\/     \\/      \n");
+	ft_putstr_fd("     \\/     \\/          \\/     \\/      \n", FDD);
 	make_header_bot(d);
 }
 
@@ -51,10 +51,10 @@ void	make_header_bot(t_data *d)
 	i = 1;
 	while (i <= d->col)
 	{
-		ft_putchar('=');
+		ft_putchar_fd('=', FDD);
 		i++;
 	}
-	ft_putchar('\n');
+	ft_putchar_fd('\n', FDD);
 }
 
 void	ft_print_pos(t_data *d)
